@@ -8,7 +8,7 @@
   "theme_color": "#0a0a0a",
   "orientation": "portrait",
   "icons": [
-    { "src": "imagens/logo/02_ICON_APP.png", "sizes": "192x192", "type": "image/png" },
-    { "src": "imagens/logo/02_ICON_APP.png", "sizes": "512x512", "type": "image/png" }
+    { "src": "21709AAF-3760-45A8-9FF4-63EB42FC-C6E3.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "21709AAF-3760-45A8-9FF4-63EB42FC-C6E3.png", "sizes": "512x512", "type": "image/png" }
   ]
 }
