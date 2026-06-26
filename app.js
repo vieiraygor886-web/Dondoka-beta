@@ -78,19 +78,29 @@ window.addEventListener("load", function() {
 // ============================================================
 // LOGIN
 // ============================================================
+// Esconder tudo exceto login ao iniciar
+function esconderTudo() {
+  g("tela-profissional").style.display = "none";
+  g("app").style.display = "none";
+  g("tela-login").style.display = "flex";
+}
+
+esconderTudo();
+
 g("btn-entrar").addEventListener("click", tentarLogin);
 g("login-senha").addEventListener("keydown", function(e){ if(e.key==="Enter") tentarLogin(); });
 
 function tentarLogin() {
-  var senha=g("login-senha").value.trim();
-  if(senha===getSenha()) {
-    g("tela-login").hidden=true;
-    g("tela-profissional").hidden=false;
-    g("login-senha").value="";
-    g("login-erro").hidden=true;
+  var senha = g("login-senha").value.trim();
+  if(senha === getSenha()) {
+    g("tela-login").style.display = "none";
+    g("tela-profissional").style.display = "flex";
+    g("app").style.display = "none";
+    g("login-senha").value = "";
+    g("login-erro").hidden = true;
   } else {
-    g("login-erro").hidden=false;
-    g("login-senha").value="";
+    g("login-erro").hidden = false;
+    g("login-senha").value = "";
     g("login-senha").focus();
   }
 }
@@ -103,8 +113,8 @@ document.querySelectorAll(".prof-card").forEach(function(b){
 });
 
 g("btn-sair").addEventListener("click", function(){
-  g("tela-profissional").hidden=true;
-  g("tela-login").hidden=false;
+  g("tela-profissional").style.display="none";
+  g("tela-login").style.display="flex";
 });
 
 function entrarComoProf(prof) {
@@ -113,8 +123,8 @@ function entrarComoProf(prof) {
   E.inicioSem=inicioSem(E.dataSel);
   E.mesAtual={a:E.dataSel.getFullYear(),m:E.dataSel.getMonth()};
   E.finMesAtual={a:E.dataSel.getFullYear(),m:E.dataSel.getMonth()};
-  g("tela-profissional").hidden=true;
-  g("app").hidden=false;
+  g("tela-profissional").style.display="none";
+  g("app").style.display="flex";
   atualizarHeader();
   ouvirAgs(prof);
   desenharCal();
@@ -129,8 +139,8 @@ function entrarComoProf(prof) {
 g("btn-trocar-prof").addEventListener("click", function(){
   fecharTodos();
   if(E.cancelarAg) E.cancelarAg();
-  g("app").hidden=true;
-  g("tela-profissional").hidden=false;
+  g("app").style.display="none";
+  g("tela-profissional").style.display="flex";
   E.prof=null; E.ags=[];
 });
 
