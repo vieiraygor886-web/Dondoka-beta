@@ -54,9 +54,10 @@ function inicioSem(d) { var c=new Date(d); c.setDate(c.getDate()-c.getDay()); re
 function fmtData(d) { return pad(d.getDate())+"/"+pad(d.getMonth()+1)+"/"+d.getFullYear(); }
 function fmtDataCurta(d) { return d.getDate()+" de "+MESES[d.getMonth()]; }
 function saudacao() {
-  var h=new Date().getHours();
-  if(h<12) return "Bom dia";
-  if(h<18) return "Boa tarde";
+  // Horário local do dispositivo
+  var h = new Date().getHours();
+  if(h >= 5 && h < 12) return "Bom dia";
+  if(h >= 12 && h < 18) return "Boa tarde";
   return "Boa noite";
 }
 function moeda(v) { return "R$ "+parseFloat(v||0).toFixed(2).replace(".",","); }
@@ -69,8 +70,8 @@ window.addEventListener("load", function() {
     var s=g("splash");
     s.classList.add("saindo");
     setTimeout(function() {
-      s.hidden=true;
-      g("tela-login").hidden=false;
+      s.style.display="none";
+      mostrarSo("tela-login");
     }, 600);
   }, 2000);
 });
@@ -78,24 +79,34 @@ window.addEventListener("load", function() {
 // ============================================================
 // LOGIN
 // ============================================================
-// Esconder tudo exceto login ao iniciar
-function esconderTudo() {
-  g("tela-profissional").style.display = "none";
-  g("app").style.display = "none";
-  g("tela-login").style.display = "flex";
+// Controle de telas — só uma aparece por vez
+function mostrarSo(idVisivelEl) {
+  var telas = ["tela-login","tela-profissional","app"];
+  telas.forEach(function(id) {
+    var el = g(id);
+    if(id === idVisivelEl) {
+      el.style.display = (id === "app") ? "flex" : "flex";
+      el.style.visibility = "visible";
+      el.style.pointerEvents = "all";
+    } else {
+      el.style.display = "none";
+      el.style.visibility = "hidden";
+      el.style.pointerEvents = "none";
+    }
+  });
 }
 
-esconderTudo();
+// Ao carregar: tudo escondido, splash aparece, depois login
+mostrarSo("tela-login"); // segurança: já oculta app e prof
 
 g("btn-entrar").addEventListener("click", tentarLogin);
 g("login-senha").addEventListener("keydown", function(e){ if(e.key==="Enter") tentarLogin(); });
 
 function tentarLogin() {
   var senha = g("login-senha").value.trim();
+  if(!senha) { g("login-erro").hidden=false; return; }
   if(senha === getSenha()) {
-    g("tela-login").style.display = "none";
-    g("tela-profissional").style.display = "flex";
-    g("app").style.display = "none";
+    mostrarSo("tela-profissional");
     g("login-senha").value = "";
     g("login-erro").hidden = true;
   } else {
@@ -113,8 +124,7 @@ document.querySelectorAll(".prof-card").forEach(function(b){
 });
 
 g("btn-sair").addEventListener("click", function(){
-  g("tela-profissional").style.display="none";
-  g("tela-login").style.display="flex";
+  mostrarSo("tela-login");
 });
 
 function entrarComoProf(prof) {
@@ -123,8 +133,7 @@ function entrarComoProf(prof) {
   E.inicioSem=inicioSem(E.dataSel);
   E.mesAtual={a:E.dataSel.getFullYear(),m:E.dataSel.getMonth()};
   E.finMesAtual={a:E.dataSel.getFullYear(),m:E.dataSel.getMonth()};
-  g("tela-profissional").style.display="none";
-  g("app").style.display="flex";
+  mostrarSo("app");
   atualizarHeader();
   ouvirAgs(prof);
   desenharCal();
@@ -139,8 +148,7 @@ function entrarComoProf(prof) {
 g("btn-trocar-prof").addEventListener("click", function(){
   fecharTodos();
   if(E.cancelarAg) E.cancelarAg();
-  g("app").style.display="none";
-  g("tela-profissional").style.display="flex";
+  mostrarSo("tela-profissional");
   E.prof=null; E.ags=[];
 });
 

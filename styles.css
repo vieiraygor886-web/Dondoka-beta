@@ -400,3 +400,10 @@ html, body {
 #toast.mostrar { opacity: 1; transform: translateX(-50%) translateY(0); }
 
 button:disabled { opacity: .4; cursor: not-allowed; }
+
+/* Garantia de bloqueio de telas */
+#tela-login, #tela-profissional { 
+  position: fixed; inset: 0; z-index: 900; 
+  overflow-y: auto;
+}
+#tela-login { background: var(--preto); }
